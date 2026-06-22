@@ -1,0 +1,371 @@
+/* ==========================================================================
+ *   CHAT & ONLINE USERS PANELS
+ *   ========================================================================== */
+
+#chatContainer,
+#onlineUsersContainer {
+    position: fixed;
+    bottom: 20px;
+    background: rgba(110, 115, 110, 0.35); /* Original greenish/grayer translucent base */
+    backdrop-filter: blur(8px); /* Slightly reduced blur */
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 8px; /* Reduced radius for sharper corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Adjusted shadow */
+    padding: 12px; /* Adjusted padding */
+    max-width: 280px; /* Revert width */
+    width: 90%; /* Keep responsive width */
+    color: var(--base-text-color); /* Keep text light */
+    z-index: 1000; /* Ensure visibility */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+    overflow-wrap: break-word;
+}
+
+#chatContainer {
+    right: 20px;
+    height: 50vh; /* Use viewport height percentage */
+    max-height: 450px; /* Add a max pixel height */
+    display: flex;
+    flex-direction: column;
+    bottom: 20px; /* Ensure it's at the bottom */
+}
+
+#onlineUsersContainer {
+    left: 20px;
+    height: 50vh; /* Use viewport height percentage */
+    max-height: 450px; /* Add a max pixel height */
+    display: flex; /* Use flex */
+    flex-direction: column; /* Stack vertically */
+    bottom: 20px; /* Ensure it's at the bottom */
+}
+
+/* Hide containers when .hidden class is applied */
+#chatContainer.hidden,
+#onlineUsersContainer.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+/* ==========================================================================
+ *   CHAT MESSAGES
+ *   ========================================================================== */
+#chatMessages {
+    flex-grow: 1; /* Take available space */
+    overflow-y: auto; /* Enable scrolling */
+    margin-bottom: 10px; /* Revert margin */
+    padding-right: 5px; /* Revert padding */
+    /* Better mobile scrolling */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Individual Chat Message */
+.chat-message {
+    margin-bottom: 6px; /* Adjusted margin */
+    padding: 5px 7px; /* Adjusted padding */
+    background: rgba(210, 210, 210, 0.06); /* Different translucent shade for inner elements */
+    border-radius: 4px; /* Reduced radius */
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Restoring previous header structure for messages */
+.chat-message .header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7em; /* Revert font size */
+    color: rgba(255, 255, 255, 0.7); /* Light text color */
+    margin-bottom: 2px;
+}
+
+.header-bottom {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.chat-message .chat-user {
+    font-weight: bold;
+    color: #fff; /* Revert base color (JS overrides this) */
+}
+
+.chat-message .chat-text {
+    margin-top: 4px;
+    font-size: 0.9em; /* Revert font size */
+    color: rgba(255, 255, 255, 0.9); /* Light text color */
+}
+
+/* ==========================================================================
+ *   CHAT INPUT
+ *   ========================================================================== */
+#chatInputArea {
+    display: flex;
+    gap: 10px; /* Revert gap */
+    margin-top: 10px; /* Revert margin */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+#chatInput {
+    flex-grow: 1;
+    padding: 7px; /* Adjusted padding */
+    background: rgba(210, 210, 210, 0.06); /* Match inner element background */
+    border: 1px solid rgba(50, 50, 50, 0.15); /* Darker, slightly more opaque border */
+    border-radius: 4px; /* Reduced radius */
+    color: #fff; /* Revert text color */
+    font-size: 1em; /* Revert font size */
+    line-height: 1.4;
+    min-width: 0; /* Allow input to shrink correctly */
+}
+
+#chatInput::placeholder {
+    color: rgba(255, 255, 255, 0.5); /* Lighter placeholder */
+}
+
+#chatSend {
+    flex-shrink: 0;
+    padding: 7px 10px; /* Adjusted padding */
+    background: rgba(210, 210, 210, 0.06); /* Match inner element background */
+    border: 1px solid rgba(50, 50, 50, 0.15); /* Darker, slightly more opaque border */
+    color: #ccc; /* Slightly muted text color */
+    border-radius: 4px; /* Reduced radius */
+    font-size: 1em; /* Revert font size */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#chatSend:hover {
+    background-color: rgba(255, 255, 255, 0.12); /* Adjusted hover opacity */
+    border-color: rgba(50, 50, 50, 0.25); /* Slightly darker border on hover */
+    color: #fff; /* Brighter text on hover */
+}
+
+/* ==========================================================================
+ *   ONLINE USERS LIST
+ *   ========================================================================== */
+#onlineUsersContainer h3 {
+    margin: 0 0 8px 0; /* Revert margin */
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--border-color); /* Use base border */
+    font-size: 1.2em; /* Revert font size */
+    text-align: center;
+    font-weight: normal;
+    flex-shrink: 0; /* Prevent shrinking */
+    color: var(--base-text-color); /* Light heading */
+}
+
+#onlineUsersList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto; /* Allow scrolling if list is long */
+    flex-grow: 1; /* Take available space */
+    /* Better mobile scrolling */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+#onlineUsersList li {
+    padding: 5px; /* Adjusted padding */
+    margin-bottom: 4px; /* Adjusted margin */
+    background: rgba(210, 210, 210, 0.06); /* Match inner element background */
+    border-radius: 4px; /* Reduced radius */
+    transition: background 0.2s ease;
+    font-size: 1em; /* Revert font size */
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Revert gap */
+    white-space: nowrap;
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis */
+    cursor: default; /* Default cursor */
+    color: var(--base-text-color); /* Light text for list items */
+}
+
+#onlineUsersList li:hover {
+    background: rgba(255, 255, 255, 0.12); /* Adjusted hover opacity */
+}
+
+/* ==========================================================================
+ *   BADGES & STAMPS
+ *   ========================================================================== */
+.badge {
+    width: 37px; /* Revert size */
+    height: 37px;
+    margin-left: 4px; /* Revert margin */
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.stamp-image {
+    width: 32px; /* Revert size */
+    height: auto;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 4px; /* Revert margin */
+    transition: transform 0.2s ease;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.stamp-image:hover {
+    transform: scale(1.1);
+}
+
+/* Stamp hover preview (Keep original styles) */
+.stamp-preview {
+    position: fixed;
+    width: 128px;
+    height: 128px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1010;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    border-radius: 4px 4px 0 0; /* Sharper corners */
+    background-color: rgba(50, 55, 50, 0.3); /* Adjusted base */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    pointer-events: none;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.stamp-caption {
+    position: fixed;
+    width: 128px;
+    padding: 8px;
+    min-height: 18px;
+    background-color: rgba(50, 55, 50, 0.5); /* Adjusted base */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: #ddd; /* Muted text */
+    font-size: 11px;
+    text-align: center;
+    border-radius: 0 0 4px 4px; /* Sharper corners */
+    z-index: 1010;
+    pointer-events: none;
+    display: none;
+    word-wrap: break-word;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+/* ==========================================================================
+ *   CHAT EMOTES
+ *   ========================================================================== */
+.chat-emote {
+    display: inline-block; /* Ensures inline behavior with block-like properties */
+    max-height: 24px; /* Adjust size as needed */
+    vertical-align: middle;
+    margin: 0 2px;
+}
+
+/* ==========================================================================
+ *   RESPONSIVE DESIGN - MOBILE IMPROVEMENTS
+ *   ========================================================================== */
+
+/* On mobile (touch devices), hide chat and users by default */
+@media (hover: none) and (pointer: coarse) {
+    #chatContainer,
+    #onlineUsersContainer {
+        /* Hidden by default on mobile - toggled via JS */
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+    }
+    
+    #chatContainer.mobile-visible,
+    #onlineUsersContainer.mobile-visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    #chatContainer,
+    #onlineUsersContainer {
+        max-width: 280px;
+        width: 280px;
+        bottom: 60px;
+        height: auto;
+        max-height: 40vh;
+        padding: 10px;
+        font-size: 0.9em;
+    }
+    
+    #onlineUsersContainer {
+        left: 10px;
+        right: auto;
+    }
+    
+    #chatContainer {
+        right: 10px;
+        left: auto;
+    }
+    
+    .badge,
+    .stamp-image {
+        width: 28px;
+        height: 28px;
+    }
+    
+    #chatInput {
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 8px;
+    }
+    
+    #chatSend {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+    
+    .chat-message {
+        font-size: 0.85em;
+        padding: 4px 6px;
+    }
+    
+    #onlineUsersList li {
+        font-size: 0.9em;
+        padding: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    #chatContainer,
+    #onlineUsersContainer {
+        max-width: calc(100vw - 20px);
+        width: calc(100vw - 20px);
+        left: 10px;
+        right: 10px;
+        bottom: 60px;
+        max-height: 35vh;
+    }
+    
+    .badge,
+    .stamp-image {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* ==========================================================================
+ *   UTILITY
+ *   ========================================================================== */
+.hidden {
+    display: none !important;
+}

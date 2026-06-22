@@ -1,0 +1,630 @@
+/* Styles specific to the main application/game view */
+
+@media (orientation: landscape) {
+    :root { --controls-size: 20vh; }
+}
+
+:root {
+  --controls-size: 10vh;
+  --color-gray: hsl(0, 0%, 55%);
+}
+
+/* Apply background image only to the main app body */
+body.app-body {
+    background-image: url('background.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    touch-action: none;
+}
+
+#hudContainer {
+    position: fixed;
+    top: var(--space-md);
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 12px 20px;
+    background-color: rgba(54, 54, 54, 0.8);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 1200;
+    color: var(--base-text-color);
+    font-size: 1em;
+    min-width: 200px;
+    justify-content: center;
+}
+
+#hudContainer a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+#hudContainer a:hover {
+    color: #fff;
+}
+
+#siteLogo {
+    position: fixed;
+    top: 10px;
+    left: 20px;
+    width: 100px;
+    height: auto;
+    z-index: 1100;
+}
+
+@media (max-width: 768px) {
+    #siteLogo {
+        width: 60px;
+        top: 8px;
+        left: 10px;
+    }
+    
+    #hudContainer {
+        top: 8px;
+        padding: 8px 14px;
+        font-size: 0.85em;
+        min-width: auto;
+        gap: 8px;
+    }
+}
+
+#userInfo {
+    right: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#usernameDisplay {
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.2s ease;
+    display: inline-block;
+}
+#usernameDisplay:hover {
+    background-color: var(--selected-bg-color);
+    color: #fff;
+}
+
+#viewport {
+    position: relative;
+    width: 960px;
+    height: 720px;
+    max-width: 100%;
+    max-height: calc(100vh - 80px);
+    max-height: calc(100dvh - 80px); /* Dynamic viewport height */
+    margin: auto;
+    overflow: hidden;
+    background-color: #000;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    /* Maintain 4:3 aspect ratio */
+    aspect-ratio: 4 / 3;
+}
+
+#viewport:fullscreen,
+:fullscreen #viewport {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100vh;
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    outline: none;
+    border: 0;
+}
+
+/* mobile controls - d-pad and action pad */
+html {
+  touch-action: none;
+}
+
+/* Hide mobile controls on desktop by default */
+#dpad, #apad {
+  display: none;
+}
+
+/* Show mobile controls only on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  #dpad, #apad {
+    display: block;
+  }
+}
+
+#dpad, #apad {
+  position: fixed;
+  bottom: 1rem;
+  z-index: 101;
+}
+
+#dpad {
+  left: 1rem;
+}
+
+#apad {
+  right: 1rem;
+}
+
+#dpad svg {
+  width: calc(2 * var(--controls-size));
+  height: calc(2 * var(--controls-size));
+  fill: var(--color-gray);
+}
+
+#dpad svg rect {
+  opacity: 0.4;
+}
+
+#apad {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: calc(var(--controls-size) * 0.2);
+}
+
+#apad .apadBtn {
+  width: var(--controls-size);
+  height: var(--controls-size);
+  background-color: var(--color-gray);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--controls-size) * 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Layout: Shift on top right, Escape and Enter side by side below */
+#apad-shift {
+  margin-bottom: calc(var(--controls-size) * 0.1);
+}
+
+#apad-shift::after {
+  content: "⇧";
+}
+
+#apad-escape::after {
+  content: "ESC";
+  font-size: calc(var(--controls-size) * 0.25);
+}
+
+#apad-enter::after {
+  content: "↵";
+}
+
+/* Row for escape and enter */
+#apad > :nth-child(2),
+#apad > :nth-child(3) {
+  display: inline-flex;
+}
+
+#apad > :nth-child(2) {
+  position: relative;
+  right: calc(var(--controls-size) * 1.1);
+  top: calc(var(--controls-size) * 1.1);
+}
+
+#apad > :nth-child(3) {
+  position: relative;
+  top: calc(var(--controls-size) * 0.1);
+}
+
+#apad .apadRectBtn {
+  position: relative;
+  border-radius: 10%;
+  margin-top: calc(var(--controls-size) * -0.4);
+  bottom: calc(var(--controls-size) * 0.05);
+  left: calc(var(--controls-size) * 0.21);
+  width: calc(var(--controls-size) * 0.6);
+  height: calc(var(--controls-size) * 0.4);
+}
+
+#apad .apadSqBtn {
+  border-radius: 10%;
+  width: calc(var(--controls-size) * 0.3);
+  height: calc(var(--controls-size) * 0.3);
+}
+
+#apad .apadBtnContainer {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: calc(var(--controls-size) * -0.8);
+  top: calc(var(--controls-size) * -0.9);
+  left: calc(var(--controls-size) * 0.1);
+  width: calc(var(--controls-size) * 0.8);
+  height: calc(var(--controls-size) * 0.8);
+}
+
+#apad .apadRectBtn + .apadBtnContainer {
+  top: calc(var(--controls-size) * -1.9);
+  left: calc(var(--controls-size) * -0.9);
+}
+
+#dpad path:not(.active), #apad .apadBtn:not(.active) {
+  opacity: 0.4;
+}
+
+#dpad path.active, #apad .apadBtn.active {
+  opacity: 1;
+}
+
+#viewport:fullscreen #dpad, #viewport:fullscreen #apad {
+  bottom: 6rem;
+}
+
+.baseColorFill {
+  fill: var(--color-gray);
+}
+
+.baseColorBg {
+  background-color: var(--color-gray);
+}
+
+.apadCircBtn {
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+ *   MOBILE RESPONSIVENESS
+ *   ========================================================================== */
+
+/* Touch device detection - optimize for touch */
+@media (hover: none) and (pointer: coarse) {
+  body.app-body {
+    /* Use safe area insets for notched devices */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  
+  #viewport {
+    /* Fill available space on mobile while maintaining aspect ratio */
+    width: 100vw;
+    height: auto;
+    max-width: 100vw;
+    max-height: calc(100dvh - 50px);
+    box-shadow: none;
+    aspect-ratio: 4 / 3;
+  }
+  
+  /* Hide logo on mobile to save space */
+  #siteLogo {
+    display: none;
+  }
+  
+  #hudContainer {
+    top: 6px;
+    padding: 6px 12px;
+    font-size: 0.85em;
+    min-width: auto;
+    max-width: calc(100vw - 100px);
+    gap: 8px;
+  }
+  
+  #topRightChatControls {
+    top: 6px;
+    right: 6px;
+    gap: 4px;
+  }
+  
+  #topRightChatControls button {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+  
+  #topRightChatControls button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  #viewport {
+    width: 100%;
+    max-height: calc(100dvh - 60px);
+    aspect-ratio: 4 / 3;
+  }
+  
+  #hudContainer {
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    font-size: 0.85em;
+    min-width: auto;
+    width: auto;
+    max-width: calc(100% - 100px);
+    gap: 8px;
+  }
+  
+  #siteLogo {
+    width: 45px;
+    top: 6px;
+    left: 6px;
+  }
+  
+  #topRightChatControls {
+    top: 6px;
+    right: 6px;
+    gap: 4px;
+  }
+  
+  #topRightChatControls button {
+    width: 34px;
+    height: 34px;
+    padding: 5px;
+  }
+  
+  #topRightChatControls button svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  #dpad, #apad {
+    bottom: 8px;
+  }
+  
+  #dpad {
+    left: 8px;
+  }
+  
+  #apad {
+    right: 8px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  #viewport {
+    max-height: calc(100dvh - 50px);
+  }
+  
+  #hudContainer {
+    font-size: 0.75em;
+    padding: 5px 10px;
+    max-width: calc(100% - 90px);
+    gap: 6px;
+  }
+  
+  #siteLogo {
+    width: 35px;
+    top: 5px;
+    left: 5px;
+  }
+  
+  #topRightChatControls {
+    top: 5px;
+    right: 5px;
+    gap: 3px;
+  }
+  
+  #topRightChatControls button {
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+  }
+  
+  #topRightChatControls button svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  /* Smaller d-pad on small phones */
+  :root {
+    --controls-size: 8vh;
+  }
+}
+
+/* Account Settings Modal Content Styling */
+#accountSettingsModal .modal-content {
+    background: rgba(54, 54, 54, 0.9);
+    color: var(--base-text-color);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#accountSettingsModal h2 {
+    color: var(--base-text-color);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+#accountSettingsModal label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    margin-top: var(--space-md);
+    font-weight: bold;
+}
+
+#accountSettingsModal input[type="color"],
+#accountSettingsModal input[type="file"] {
+    display: block;
+    margin-bottom: var(--space-sm);
+}
+
+#accountSettingsModal input[type="file"]::file-selector-button {
+    font-family: inherit;
+    font-size: 0.9em;
+    color: var(--base-text-color);
+    cursor: pointer;
+    border: 1px solid var(--input-border-color);
+    background-color: var(--element-bg-color);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.2s ease;
+    margin-right: var(--space-sm);
+}
+
+#accountSettingsModal input[type="file"]::file-selector-button:hover {
+     background-color: var(--selected-bg-color);
+}
+
+#accountSettingsModal button {
+    margin-top: var(--space-sm);
+    margin-right: var(--space-sm);
+    display: inline-block;
+}
+
+#accountSettingsModal hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: var(--space-lg) 0;
+}
+
+#accountSettingsModal .close-modal {
+    font-size: 2rem;
+    line-height: 1;
+    padding: 0 var(--space-xs);
+    top: var(--space-sm);
+    right: var(--space-sm);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#accountSettingsModal .close-modal:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ==========================================================================
+ *   TOP RIGHT CONTROLS (Chat, Players, Fullscreen, DND)
+ *   ========================================================================== */
+#topRightChatControls {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Mobile adjustments for top right controls */
+@media (max-width: 768px) {
+    #topRightChatControls {
+        top: 8px;
+        right: 10px;
+        gap: 6px;
+    }
+    
+    #topRightChatControls button {
+        width: 28px;
+        height: 28px;
+        padding: 5px;
+    }
+    
+    #topRightChatControls button svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+#topRightChatControls button {
+    background: rgba(54, 54, 54, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 6px;
+    width: 32px;
+    height: 32px;
+    color: var(--base-text-color);
+    opacity: 0.8;
+    pointer-events: auto;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#topRightChatControls button svg {
+    width: 18px;
+    height: 18px;
+}
+
+#topRightChatControls button:hover {
+    opacity: 1;
+    background: rgba(74, 74, 74, 0.9);
+}
+
+#topRightChatControls button.active {
+    background: rgba(74, 74, 74, 0.9);
+    opacity: 1;
+}
+
+#onlineUsersIconHidden {
+    display: none;
+}
+
+/* ==========================================================================
+ *   MAP ID DISPLAY
+ *   ========================================================================== */
+#mapid-display {
+    position: fixed !important;
+    top: 10px !important;
+    right: calc(20px + 32px * 4 + 30px) !important;
+    z-index: 999 !important;
+    max-width: 300px !important;
+}
+
+@media (max-width: 1200px) {
+    #mapid-display {
+        right: calc(20px + 32px * 4 + 20px) !important;
+        max-width: 250px !important;
+    }
+}
+
+@media (max-width: 1000px) {
+    #mapid-display {
+        right: calc(20px + 32px * 4 + 10px) !important;
+        max-width: 200px !important;
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #mapid-display {
+        /* On mobile, position at bottom left to avoid overlap */
+        top: auto !important;
+        bottom: 50px !important;
+        right: auto !important;
+        left: 10px !important;
+        max-width: 150px !important;
+        font-size: 11px !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        padding: 4px 8px !important;
+        border-radius: 4px !important;
+    }
+}
+
+/* DND Mode - Game page specific */
+body.app-body.dnd-mode #viewport {
+    position: relative;
+    z-index: 2;
+}
+
+body.app-body.dnd-mode #topRightChatControls {
+    z-index: 10000;
+}

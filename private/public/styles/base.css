@@ -1,0 +1,364 @@
+/* ==========================================================================
+ *   VARIABLES & GLOBAL STYLES
+ *   ========================================================================== */
+:root {
+    /* Lighter dark theme */
+    --base-bg-color: #252525; /* Dark Gray */
+    --text-area-bg-color: #1e1e1e; /* Slightly darker gray */
+    --base-text-color: #e0e0e0; /* Slightly off-white text */
+    --element-bg-color: #363636; /* Medium Gray */
+    --selected-bg-color: #4a4a4a; /* Lighter Gray for hover/selection */
+    --border-color: #4a4a4a; /* Match selected bg */
+    --input-border-color: #4a4a4a; /* Match selected bg */
+    --link-color: #a0d9ef; /* Lighter blue for links */
+    --active-bg-color: #1e1e1e; /* Match text area bg */
+    --controls-size: 10vh; /* Base size, potentially overridden by media query */
+
+    /* Add some basic spacing units */
+    --space-xs: 0.25rem; /* 4px */
+    --space-sm: 0.5rem;  /* 8px */
+    --space-md: 1rem;    /* 16px */
+    --space-lg: 1.5rem;  /* 24px */
+    --space-xl: 2rem;    /* 32px */
+
+    /* Consistent border radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+}
+
+
+/* Basic reset and box-sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px; /* Base font size */
+    color: var(--base-text-color);
+    background-color: var(--base-bg-color);
+    /* Consider moving background image to specific pages or body if not global */
+    /* background-image: url('background.png'); */
+    /* background-size: cover; */
+    /* background-position: center; */
+    /* background-attachment: fixed; /* Prevents scrolling with content */
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--base-bg-color); /* Ensure body also has bg color */
+    display: flex; /* Use flex for basic layout control */
+    flex-direction: column; /* Default to column */
+    opacity: 0; /* Start hidden for fade-in */
+    animation: fadeIn 0.5s ease 0.2s forwards; /* Apply fade-in animation */
+    /* Better mobile scrolling */
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+}
+
+/* Add fade-in keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Improve default text selection */
+::selection {
+    background-color: var(--link-color);
+    color: var(--base-bg-color);
+}
+
+/* ==========================================================================
+ *   COMMON ELEMENTS & UTILITIES
+ *   ========================================================================== */
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+a:hover,
+a:focus {
+    color: #fff; /* Slightly brighter on hover/focus */
+    outline: none; /* Or style a custom focus outline */
+}
+
+img {
+    max-width: 100%; /* Prevent images from overflowing containers */
+    height: auto;
+    display: block; /* Remove bottom space */
+}
+
+button {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    cursor: pointer;
+    border: none;
+    background-color: var(--element-bg-color);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--border-radius-md);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: var(--selected-bg-color);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+input,
+textarea,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    padding: var(--space-sm);
+    border: 1px solid var(--input-border-color);
+    background-color: var(--text-area-bg-color);
+    color: var(--base-text-color);
+    border-radius: var(--border-radius-sm);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 1px solid var(--link-color);
+    border-color: var(--link-color);
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Basic container for centered content */
+.container {
+    width: 90%;
+    max-width: 1200px; /* Adjust max-width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+}
+
+/* Tooltip styling using data-points attribute */
+[data-points] {
+    position: relative;
+}
+[data-points]:hover::after {
+    content: attr(data-points);
+    position: absolute;
+    bottom: calc(100% + var(--space-xs)); /* Position above the element */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    white-space: nowrap;
+    font-size: 0.875rem; /* 14px */
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+[data-points]:hover::after {
+    opacity: 1;
+}
+
+/* ==========================================================================
+ *   MODAL STYLES (SHARED)
+ *   ========================================================================== */
+.modal {
+    /* display: none; /* REMOVE display: none */
+    position: fixed;
+    inset: 0; /* Covers the entire viewport */
+    /* Remove background and backdrop filter from overlay */
+    /* backdrop-filter: blur(5px); */
+    /* -webkit-backdrop-filter: blur(5px); */
+    /* background: rgba(0, 0, 0, 0.7); */
+    display: flex; /* Keep flex for centering */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Restore original z-index */
+    padding: var(--space-md);
+    opacity: 0;
+    transform: scale(0.95); /* Start slightly smaller */ 
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s; /* Restore transition */
+    visibility: hidden; /* Use visibility instead of display:none */
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.modal.is-active {
+    /* display: flex; /* Already set */
+    opacity: 1;
+    transform: scale(1); /* Scale to normal size */
+    visibility: visible; /* Make visible */
+    pointer-events: auto; /* Allow interaction when active */
+    transition-delay: 0s; /* Ensure visibility transition applies immediately on show */
+}
+
+.modal-content {
+    background: var(--element-bg-color); /* Use new element bg */
+    padding: var(--space-lg);
+    border-radius: var(--border-radius-lg);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: var(--space-lg);
+    font-size: 1.5rem; /* 24px */
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-weight: bold;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="password"],
+.modal-content input[type="email"],
+.modal-content textarea {
+    width: 100%;
+    margin-bottom: var(--space-md);
+}
+
+.modal-content button {
+    margin-top: var(--space-sm);
+    margin-right: var(--space-sm);
+    /* Override base button for modals */
+    background-color: var(--text-area-bg-color); /* Use darker gray */
+    color: #fff; /* Use pure white text */
+    border: 1px solid var(--border-color);
+}
+
+.modal-content button:hover {
+    background-color: var(--element-bg-color); /* Use medium gray for hover */
+    border-color: var(--link-color);
+}
+
+.close-modal {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    font-size: 1.5rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--base-text-color);
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.close-modal:hover {
+    opacity: 1;
+}
+
+/* ==========================================================================
+ *   RESPONSIVENESS
+ *   ========================================================================== */
+
+/* Example Media Query for landscape orientation - specific overrides like controls-size should go in relevant component CSS */
+/* @media (orientation: landscape) {
+    :root {
+        --controls-size: 20vh;
+    }
+} */
+
+/* Example Media Query for smaller screens */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .modal-content {
+        padding: var(--space-md);
+        width: 95%;
+        max-width: 95%;
+        max-height: 85vh;
+    }
+    
+    input,
+    textarea,
+    select {
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: var(--space-sm);
+        width: 98%;
+        max-width: 98%;
+        max-height: 90vh;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    /* Use dynamic viewport height on mobile */
+    html, body {
+        height: 100%;
+        height: 100dvh;
+    }
+    
+    /* Ensure tappable elements are at least 44px */
+    button:not(#topRightChatControls button):not(#topRightChatControlsHome button) {
+        min-height: 44px;
+    }
+}
+
+/* ==========================================================================
+ *   DO NOT DISTURB (DND) MODE - SHARED
+ *   ========================================================================== */
+body.dnd-mode::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#toggleDNDButton.active {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+#toggleDNDButton.active svg {
+    color: #ccc;
+}

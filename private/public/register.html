@@ -1,0 +1,69 @@
+<!-- public/register.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>rainyday - register</title>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/login.css" />
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+
+      fetch('/admin/registration-status')
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to fetch registration status');
+          return response.json();
+        })
+        .then(data => {
+          const formContainer = document.querySelector('.form-container');
+          const form = document.querySelector('form');
+          if (!data.registrationsOpen) {
+            const closedMessage = document.createElement('p');
+            closedMessage.classList.add('status-message');
+            closedMessage.textContent = 'Registrations are currently closed.';
+            form.style.display = 'none';
+            formContainer.appendChild(closedMessage);
+            return;
+          }
+          if (error === 'username_taken') {
+            const errorMessage = document.createElement('p');
+            errorMessage.classList.add('status-message');
+            errorMessage.textContent = 'Username already taken. Please choose a different one.';
+            formContainer.prepend(errorMessage);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching registration status:', error);
+          const formContainer = document.querySelector('.form-container');
+          const errorMessage = document.createElement('p');
+          errorMessage.classList.add('status-message');
+          errorMessage.textContent = 'Failed to check registration status. Please try again later.';
+          formContainer.prepend(errorMessage);
+        });
+    });
+  </script>
+</head>
+<body class="login-register-body">
+  <audio autoplay loop>
+    <source src="/assets/audio/ambiance/rainyday.ogg" type="audio/ogg">    Your browser does not support the audio element.
+  </audio>
+<div class="form-container">
+      <img src="/assets/icons/logo.png" class="logo" alt="Site Logo">
+  <h1>Register for rainyday</h1>
+  <form method="POST" action="/register">
+    <label>Username:</label>
+    <input type="text" name="username" required>
+    <label>Password:</label>
+    <input type="password" name="password" required>
+    <button type="submit">Sign Up</button>
+  </form>
+  <p>Already have an account? <a href="/login">Login here</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!-- public/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Login</title>
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/login.css">
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+      if (error === 'invalid_credentials') {
+        const errorMessage = document.createElement('p');
+        errorMessage.style.color = 'red';
+        errorMessage.textContent = 'Invalid username or password. Please try again.';
+        document.querySelector('.form-container').prepend(errorMessage);
+      }
+    });
+  </script>
+</head>
+<body class="login-register-body">
+  <audio autoplay loop>
+    <source src="/assets/audio/ambiance/rainyday.ogg" type="audio/ogg">    Your browser does not support the audio element.
+  </audio>
+  <div class="form-container">
+    <img src="/assets/icons/logo.png" class="logo" alt="Site Logo">
+    <h1>Welcome to rainyday</h1>
+    <form method="POST" action="/login">
+      <label>Username:</label>
+      <input type="text" name="username" required>
+      <label>Password:</label>
+      <input type="password" name="password" required>
+      <button type="submit">Log In</button>
+    </form>
+
+    <p>Need an account? <a href="/register">Register here</a></p>
+  </div>
+</body>
+</html>

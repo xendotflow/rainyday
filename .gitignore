@@ -1,0 +1,6 @@
+node_modules/
+.env
+EasyRPG-Player-Monoko/
+private/users/*
+!private/users/readme.md
+private/registrationsState.json
